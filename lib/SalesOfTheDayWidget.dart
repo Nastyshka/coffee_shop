@@ -36,18 +36,18 @@ class SalesOfTheDayWidget extends StatelessWidget {
               final coffees = snapshot.data!;
 
               calculateTotalForTheDay(coffees);
-              Widget totalWid = TodayTotalWidget(todayTotal: todayTotal);
+              // Widget totalWid = TodayTotalWidget(todayTotal: todayTotal);
               bool isEditable = DateTime.now().day == selectedDay.day &&
                   DateTime.now().month == selectedDay.month &&
                   DateTime.now().year == selectedDay.year;
               return Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: SingleChildScrollView(
-                      child: Flex(
+                      child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          direction: Axis.vertical,
+                          // direction: Axis.vertical,
                           children: <Widget>[
-                        Align(alignment: Alignment.topLeft, child: totalWid),
+                        // Align(alignment: Alignment.topLeft, child: totalWid),
                         SingleChildScrollView(
                           child: ListView.builder(
                               shrinkWrap: true,
@@ -59,7 +59,28 @@ class SalesOfTheDayWidget extends StatelessWidget {
                                   editable: isEditable,
                                   provider: provider,
                                   updateFunction: updateTotals)),
-                        )
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: FloatingActionButton(
+                                child: Icon(Icons.collections_bookmark),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                            title: Text('Total of the day',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Color(0xFF0d595a),
+                                                    fontSize: 28,
+                                                    fontWeight: FontWeight.bold)),
+                                            content: Text('${todayTotal}',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 38,
+                                                    fontWeight: FontWeight.bold)),
+                                          ));
+                                }))
                       ])));
             }));
   }

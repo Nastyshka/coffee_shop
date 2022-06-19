@@ -71,22 +71,26 @@ class _MenuItem extends State<CoffeeMenuItem> {
   Widget build(BuildContext context) {
     return Card(
         child: Container(
-            margin: EdgeInsets.all(10.0),
-            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.all(4.0),
+            padding: EdgeInsets.only(left: 2, right: 7, top: 7, bottom:7),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Column(children: <Widget>[
-                  Text('${this._name}',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Container(
+                    width: 120,
+                      child: Text(
+                          '${this._name}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))),
                   Text('${this._price}₴')
                 ]),
                 // Spacer(),
                 Spacer(),
                 Padding(
                   padding:
-                      EdgeInsets.only(left: 15, bottom: 0, right: 42, top: 0),
+                      EdgeInsets.only(left: 10, bottom: 0, right: 33, top: 0),
                   //apply padding to all four sides
                   child: AnimatedDefaultTextStyle(
                     child: Text(' $_amountSold'),
@@ -109,7 +113,7 @@ class _MenuItem extends State<CoffeeMenuItem> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
-                            padding: EdgeInsets.all(13),
+                            padding: EdgeInsets.all(9),
                             primary: Color(0xF90d595a),
                             onPrimary: Colors.white,
                           ),
@@ -126,7 +130,7 @@ class _MenuItem extends State<CoffeeMenuItem> {
                             primary: Colors.red,
                             onPrimary: Colors.white,
                             shape: CircleBorder(),
-                            padding: EdgeInsets.all(13),
+                            padding: EdgeInsets.all(9),
                           ),
                           onPressed: () async {
                             _decrement();

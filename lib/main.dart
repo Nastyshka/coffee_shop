@@ -59,7 +59,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double todayTotal = 0;
-  DateTime _selectedDay = DateTime.now().subtract(Duration(days: 1));
+  DateTime _selectedDay = DateTime.now();
   Future<List<CoffeeItem>> get coffees => getDataForDay(
       DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day));
 
@@ -95,12 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
     wid = SalesOfTheDayWidget(
         coffees: coffees, provider: widget.provider, selectedDay: _selectedDay);
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         //apply padding to all four sides
         title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              // Text('${todayTotal}₴'),
               Text(widget.title),
             ]),
         leading: Padding(
