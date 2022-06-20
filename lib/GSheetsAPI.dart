@@ -35,7 +35,7 @@ class GSheetsAPI {
 
   Future submitSale(String name, double price, int amount) async {
     final sale = new OneSale(name, price, amount, DateTime.now());
-    _salesSheet!.values.map.appendRow(sale.toJson());
+    return _salesSheet!.values.map.appendRow(sale.toJson());
   }
 
   Future<List<CoffeeItem>> getMenu() async {

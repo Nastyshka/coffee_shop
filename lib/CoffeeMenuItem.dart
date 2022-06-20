@@ -62,7 +62,7 @@ class _MenuItem extends State<CoffeeMenuItem> {
   void showDecMessage() {}
 
   void _decrement() {
-    widget.updateFunction(-1*_price);
+    widget.updateFunction(-1 * _price);
     setState(() {
       _amountSold--;
       animated = true;
@@ -74,20 +74,35 @@ class _MenuItem extends State<CoffeeMenuItem> {
     });
   }
 
+  DateTime buttonClickTime = DateTime.now();
+
+  bool isRedundantClick(DateTime currentTime) {
+    if (buttonClickTime == null) {
+      buttonClickTime = currentTime;
+      return false;
+    }
+    if (currentTime.difference(buttonClickTime).inSeconds < 1) {
+      //set this difference time in seconds
+      return true;
+    }
+
+    buttonClickTime = currentTime;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
         child: Container(
             margin: EdgeInsets.all(4.0),
-            padding: EdgeInsets.only(left: 2, right: 7, top: 7, bottom:7),
+            padding: EdgeInsets.only(left: 2, right: 7, top: 7, bottom: 7),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Column(children: <Widget>[
                   Container(
-                    width: 120,
-                      child: Text(
-                          '${this._name}',
+                      width: 120,
+                      child: Text('${this._name}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold))),
@@ -114,7 +129,6 @@ class _MenuItem extends State<CoffeeMenuItem> {
                     curve: Curves.bounceInOut,
                   ),
                 ),
-
                 _editable
                     ? Row(children: <Widget>[
                         ElevatedButton(
@@ -125,10 +139,16 @@ class _MenuItem extends State<CoffeeMenuItem> {
                             onPrimary: Colors.white,
                           ),
                           onPressed: () async {
-                            _increment();
-                            await widget.provider
+                            if (isRedundantClick(DateTime.now())) {
+                              print('hold on, processing');
+                              return;
+                            }
+                            bool res = await widget.provider
                                 .submitSale(this._name, this._price, 1);
-                            showIncMessage();
+                            if (res) {
+                              _increment();
+                              showIncMessage();
+                            }
                           },
                           child: const Icon(Icons.add),
                         ),
@@ -140,6 +160,10 @@ class _MenuItem extends State<CoffeeMenuItem> {
                             padding: EdgeInsets.all(9),
                           ),
                           onPressed: () async {
+                            if (isRedundantClick(DateTime.now())) {
+                              print('hold on, processing');
+                              return;
+                            }
                             _decrement();
                             await widget.provider
                                 .submitSale(this._name, this._price, -1);
@@ -149,7 +173,6 @@ class _MenuItem extends State<CoffeeMenuItem> {
                         ),
                       ])
                     : Row(children: <Widget>[]),
-                // const SizedBox(width: 10)
               ],
             )));
   }

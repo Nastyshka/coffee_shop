@@ -17,7 +17,6 @@ class SalesOfTheDayWidget extends StatelessWidget {
   double todayTotal = 0;
 
   updateTotals(double addValue) {
-    print('>>>> add totals ' + addValue.toString());
     todayTotal += addValue;
   }
 
@@ -68,7 +67,7 @@ class SalesOfTheDayWidget extends StatelessWidget {
               showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                        title: Text('Total of the day',
+                        title: Text('Сума за день ',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color(0xFF0d595a),

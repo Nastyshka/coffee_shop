@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: darkTeal,
         scaffoldBackgroundColor: Color(0x99EEE1B2),
       ),
-      home: MyHomePage(title: 'Coffee counter', provider: provider),
+      home: MyHomePage(title: 'Рахувальник Кави', provider: provider),
     );
   }
 }
@@ -74,13 +74,15 @@ class _MyHomePageState extends State<MyHomePage> {
     List<CoffeeItem> menu = await widget.provider.getMenu();
     List<OneSale> sales = await widget.provider.getAggSalesData();
     Map<dynamic, OneSale> salesByDate = Map();
-    sales.forEach((oneSale) {
-      if (oneSale.saleDate.year == selectedDate.year &&
-          oneSale.saleDate.month == selectedDate.month &&
-          oneSale.saleDate.day == selectedDate.day) {
-        salesByDate[oneSale.name] = oneSale;
-      }
-    });
+    if (sales != null) {
+      sales.forEach((oneSale) {
+        if (oneSale.saleDate.year == selectedDate.year &&
+            oneSale.saleDate.month == selectedDate.month &&
+            oneSale.saleDate.day == selectedDate.day) {
+          salesByDate[oneSale.name] = oneSale;
+        }
+      });
+    }
     todayTotal = 0;
     for (CoffeeItem item in menu) {
       if (salesByDate[item.name] != null) {
@@ -109,13 +111,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Image.asset('assets/images/logo.png'),
         ),
       ),
-       body: Column (
-          children: <Widget>[
-            Ink(color: const Color(0xFF0d595a), child: buildDateHeaderRow()),
-            Expanded(child: wid) ,
-          ]),
+      body: Column(children: <Widget>[
+        Ink(color: const Color(0xFF0d595a), child: buildDateHeaderRow()),
+        Expanded(child: wid),
+      ]),
     );
-
   }
 
   Row buildDateHeaderRow() {
