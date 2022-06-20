@@ -60,14 +60,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late double todayTotal = 0;
   DateTime _selectedDay = DateTime.now();
+
   Future<List<CoffeeItem>> get coffees => getDataForDay(
       DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day));
 
   set coffees(Future<List<CoffeeItem>> cc) {
     coffees = cc;
   }
-  late SalesOfTheDayWidget wid;
 
+  late SalesOfTheDayWidget wid;
 
   Future<List<CoffeeItem>> getDataForDay(selectedDate) async {
     List<CoffeeItem> menu = await widget.provider.getMenu();
@@ -108,32 +109,42 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Image.asset('assets/images/logo.png'),
         ),
       ),
-      body: Stack(children: <Widget>[
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedDay = _selectedDay.add(Duration(days: 1));
-                    });
-                  },
-                  child: Icon(Icons.navigate_before)),
-              Text(DateFormat.yMd().format(_selectedDay),
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0d595a))),
-              TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _selectedDay = _selectedDay.add(Duration(days: -1));
-                    });
-                  },
-                  child: Icon(Icons.navigate_next)),
-            ]),
-        wid,
-      ]),
+       body: Column (
+          children: <Widget>[
+            Ink(color: const Color(0xFF0d595a), child: buildDateHeaderRow()),
+            Expanded(child: wid) ,
+          ]),
     );
+
+  }
+
+  Row buildDateHeaderRow() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  _selectedDay = _selectedDay.add(const Duration(days: -1));
+                });
+              },
+              child: Icon(Icons.navigate_before, color: Colors.white)),
+          Text(DateFormat.yMd().format(_selectedDay),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  // color: Color(0xFF0d595a)),
+                  color: Colors.white)),
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  _selectedDay = _selectedDay.add(const Duration(days: 1));
+                });
+              },
+              child: Icon(
+                Icons.navigate_next,
+                color: Colors.white,
+              )),
+        ]);
   }
 }

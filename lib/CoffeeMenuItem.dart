@@ -62,8 +62,15 @@ class _MenuItem extends State<CoffeeMenuItem> {
   void showDecMessage() {}
 
   void _decrement() {
+    widget.updateFunction(-1*_price);
     setState(() {
       _amountSold--;
+      animated = true;
+      Timer(Duration(milliseconds: 400), () {
+        setState(() {
+          animated = false;
+        });
+      });
     });
   }
 
