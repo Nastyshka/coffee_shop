@@ -38,6 +38,11 @@ class GSheetsAPI {
     return _salesSheet!.values.map.appendRow(sale.toJson());
   }
 
+  Future addItemToMenu(String newName, double newPrice) async {
+    final newMenuItem = NewMenuItem(newName, newPrice);
+    return _menuSheet!.values.map.appendRow(newMenuItem.toJson());
+  }
+
   Future<List<CoffeeItem>> getMenu() async {
     final values = await _menuSheet!.values.map.allRows();
     return values!.map((value) => CoffeeItem.fromJson(value)).toList();
@@ -52,4 +57,14 @@ class GSheetsAPI {
       {required String title}) async {
     return ss.worksheetByTitle(title)!;
   }
+}
+
+class NewMenuItem {
+  String name = '';
+  double price = 0;
+  NewMenuItem(this.name, this.price);
+  Map<String, dynamic> toJson() => {
+    CoffeeSaleFields.name: this.name,
+    CoffeeSaleFields.price: this.price,
+  };
 }

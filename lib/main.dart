@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:coffee_tracker/CoffeeItem.dart';
 import 'package:coffee_tracker/GSheetsAPI.dart';
 import 'package:coffee_tracker/OneSale.dart';
 import 'package:coffee_tracker/SalesOfTheDayWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 void main() async {
@@ -58,6 +61,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _formKey = GlobalKey<FormState>();
   late double todayTotal = 0;
   DateTime _selectedDay = DateTime.now();
 
@@ -105,13 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(widget.title),
-              IconButton(
-                  onPressed: () {
-                    setState((){
-                      _selectedDay = DateTime.now();
-                    });
-                  },
-                  icon: Icon(Icons.refresh))
+              Padding(
+                  padding:
+                      EdgeInsets.only(left: 0, bottom: 0, right: 25, top: 0),
+                  child: buildAddMenuButton())
             ]),
         leading: Padding(
           padding: EdgeInsets.only(left: 10, bottom: 0, right: 0, top: 0),
@@ -123,6 +124,89 @@ class _MyHomePageState extends State<MyHomePage> {
         Expanded(child: wid),
       ]),
     );
+  }
+
+  IconButton buildAddMenuButton() {
+    TextEditingController nameEditingController = TextEditingController();
+    TextEditingController priceEditingController = TextEditingController();
+    return IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                  title: Text('Додати в меню ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color(0xFF0d595a),
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold)),
+                  content: Form(
+                    key: _formKey,
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: nameEditingController,
+                              decoration: const InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Назва',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Обовязкове поле';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: priceEditingController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              decoration: const InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Ціна',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Обовязкове поле';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(
+                                child: Text("Додати"),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    widget.provider.addItemToMenu(
+                                        nameEditingController.text,
+                                        double.parse(
+                                            priceEditingController.text));
+                                    _formKey.currentState!.save();
+
+                                    Navigator.pop(context);
+                                    Timer _timer = new Timer(
+                                        const Duration(milliseconds: 900), () {
+                                      setState(() {
+                                        _selectedDay = DateTime.now();
+                                      });
+                                    });
+                                  }
+                                },
+                              )),
+                        ]),
+                  )));
+        },
+        icon: Icon(Icons.add));
   }
 
   Row buildDateHeaderRow() {
@@ -152,6 +236,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.navigate_next,
                 color: Colors.white,
               )),
+          Padding(
+              padding: EdgeInsets.only(left: 0, bottom: 0, right: 0, top: 0),
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedDay = DateTime.now();
+                    });
+                  },
+                  color: Colors.white,
+                  icon: Icon(Icons.refresh)))
         ]);
   }
 }
