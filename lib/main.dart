@@ -105,6 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(widget.title),
+              IconButton(
+                  onPressed: () {
+                    setState((){
+                      _selectedDay = DateTime.now();
+                    });
+                  },
+                  icon: Icon(Icons.refresh))
             ]),
         leading: Padding(
           padding: EdgeInsets.only(left: 10, bottom: 0, right: 0, top: 0),

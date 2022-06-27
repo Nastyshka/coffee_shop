@@ -39,7 +39,7 @@ class GSheetsAPI {
   }
 
   Future<List<CoffeeItem>> getMenu() async {
-    final values = (await _menuSheet!.values.map.allRows());
+    final values = await _menuSheet!.values.map.allRows();
     return values!.map((value) => CoffeeItem.fromJson(value)).toList();
   }
 
