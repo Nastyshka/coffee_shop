@@ -47,7 +47,7 @@ class SalesOfTheDayWidget extends StatelessWidget {
                       amountSold: coffees[index].amountSold,
                       editable: isEditable,
                       provider: provider,
-                      updateFunction: updateTotals);
+                      updateParentFunction: updateTotals);
                   if (index == coffees.length-1) {
                     return Column(
                         children: <Widget>[ci, buildTotalButton(context)]);

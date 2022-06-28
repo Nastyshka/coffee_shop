@@ -3,6 +3,8 @@ import 'package:coffee_tracker/OneSale.dart';
 import 'package:coffee_tracker/CoffeeItem.dart';
 import 'package:gsheets/gsheets.dart';
 
+import 'MyMenuItem.dart';
+
 class GSheetsAPI {
   static const _credentials = r'''{
   "type": "service_account",
@@ -30,7 +32,6 @@ class GSheetsAPI {
     _salesSheet = await _getWorkSheet(ss, title: 'sales');
     _todaySalesSheet = await _getWorkSheet(ss, title: 'salesByDay');
     _menuSheet = await _getWorkSheet(ss, title: 'menu');
-    final salesHeaders = CoffeeSaleFields.getFields();
   }
 
   Future submitSale(String name, double price, int amount) async {
@@ -39,13 +40,13 @@ class GSheetsAPI {
   }
 
   Future addItemToMenu(String newName, double newPrice) async {
-    final newMenuItem = NewMenuItem(newName, newPrice);
+    final newMenuItem = MyMenuItem(newName, newPrice);
     return _menuSheet!.values.map.appendRow(newMenuItem.toJson());
   }
 
-  Future<List<CoffeeItem>> getMenu() async {
+  Future<List<MyMenuItem>> getMenu() async {
     final values = await _menuSheet!.values.map.allRows();
-    return values!.map((value) => CoffeeItem.fromJson(value)).toList();
+    return values!.map((value) => MyMenuItem.fromJson(value)).toList();
   }
 
   Future<List<OneSale>> getAggSalesData() async {
@@ -53,18 +54,19 @@ class GSheetsAPI {
     return values!.map((value) => OneSale.fromJson(value)).toList();
   }
 
+  Future<bool> deleteItemFromMenu(int index) async {
+    if (_menuSheet == null) return false;
+     return _menuSheet!.deleteRow(index);
+  }
+
+  Future<bool> updateMenuItem(int index, Map<String, dynamic> newValues) async {
+    if (_menuSheet == null) return false;
+    return _menuSheet!.values.map.insertRow(index, newValues);
+  }
+
+
   Future<Worksheet> _getWorkSheet(Spreadsheet ss,
       {required String title}) async {
     return ss.worksheetByTitle(title)!;
   }
-}
-
-class NewMenuItem {
-  String name = '';
-  double price = 0;
-  NewMenuItem(this.name, this.price);
-  Map<String, dynamic> toJson() => {
-    CoffeeSaleFields.name: this.name,
-    CoffeeSaleFields.price: this.price,
-  };
 }

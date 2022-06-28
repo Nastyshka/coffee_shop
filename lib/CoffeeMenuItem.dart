@@ -11,18 +11,18 @@ class CoffeeMenuItem extends StatefulWidget {
       required this.amountSold,
       required this.editable,
       required this.provider,
-      required this.updateFunction})
+      required this.updateParentFunction})
       : super(key: key);
   final String name;
   final double price;
   final int amountSold;
   final GSheetsAPI provider;
-  final updateFunction;
+  final updateParentFunction;
   final editable;
 
   @override
   _MenuItem createState() => _MenuItem(name, price, amountSold, editable,
-      provider: provider, updateFunction: updateFunction);
+      provider: provider, updateFunction: updateParentFunction);
 }
 
 typedef Int2VoidFunc = void Function(double);
@@ -45,7 +45,7 @@ class _MenuItem extends State<CoffeeMenuItem> {
   }
 
   void _increment() {
-    widget.updateFunction(_price);
+    widget.updateParentFunction(_price);
     setState(() {
       animated = true;
       _amountSold++;
@@ -57,12 +57,8 @@ class _MenuItem extends State<CoffeeMenuItem> {
     });
   }
 
-  void showIncMessage() {}
-
-  void showDecMessage() {}
-
   void _decrement() {
-    widget.updateFunction(-1 * _price);
+    widget.updateParentFunction(-1 * _price);
     setState(() {
       _amountSold--;
       animated = true;
@@ -147,7 +143,6 @@ class _MenuItem extends State<CoffeeMenuItem> {
                                 .submitSale(this._name, this._price, 1);
                             if (res) {
                               _increment();
-                              showIncMessage();
                             }
                           },
                           child: const Icon(Icons.add),
@@ -167,7 +162,6 @@ class _MenuItem extends State<CoffeeMenuItem> {
                             _decrement();
                             await widget.provider
                                 .submitSale(this._name, this._price, -1);
-                            showDecMessage();
                           },
                           child: const Icon(Icons.remove),
                         ),
@@ -177,3 +171,4 @@ class _MenuItem extends State<CoffeeMenuItem> {
             )));
   }
 }
+
