@@ -103,9 +103,6 @@ class _ManageMenuItem extends State<ManageMenuItem> {
 
                       showEditDialog(context, nameEditingController,
                           priceEditingController);
-
-                      bool res = await widget.provider.updateMenuItem(
-                          26, {'id': 26, 'name': 'edited', 'price': 42.42});
                     },
                     child: const Icon(Icons.edit),
                   ),

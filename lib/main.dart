@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: darkTeal,
         scaffoldBackgroundColor: Color(0x99EEE1B2),
       ),
-      home: MyHomePage(title: 'Кава', provider: provider, mode: AppMode.sales),
+      home: MyHomePage(title: 'Кава тут', provider: provider, mode: AppMode.sales),
     );
   }
 }
@@ -134,6 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: Padding(
           padding: EdgeInsets.only(left: 10, bottom: 0, right: 0, top: 0),
           child: Image.asset('assets/images/logo.png'),
+
         ),
       ),
       body: Column(
