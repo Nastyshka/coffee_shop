@@ -67,6 +67,45 @@ class _ManageMenuItem extends State<ManageMenuItem> {
     TextEditingController priceEditingController =
         TextEditingController(text: '${this._price}');
 
+    List<Widget> actionWidgets = <Widget>[
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(9),
+          primary: Color(0xF90d595a),
+          onPrimary: Colors.white,
+        ),
+        onPressed: () async {
+          if (isRedundantClick(DateTime.now())) {
+            print('hold on, processing');
+            return;
+          }
+
+          showEditDialog(context, nameEditingController,
+              priceEditingController);
+        },
+        child: const Icon(Icons.edit),
+      ),];
+
+    if (this._id != 2) {
+      actionWidgets.add(ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red,
+          onPrimary: Colors.white,
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(9),
+        ),
+        onPressed: () async {
+          if (isRedundantClick(DateTime.now())) {
+            print('hold on, processing');
+            return;
+          }
+          await widget.provider.deleteItemFromMenu(_id);
+          widget.updateParentFunction();
+        },
+        child: const Icon(Icons.delete),
+      ));
+    }
     return Card(
         child: Container(
             margin: EdgeInsets.all(4.0),
@@ -87,43 +126,7 @@ class _ManageMenuItem extends State<ManageMenuItem> {
                         style: TextStyle(fontSize: 18))),
                 // Spacer(),
                 Spacer(),
-                Row(children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(9),
-                      primary: Color(0xF90d595a),
-                      onPrimary: Colors.white,
-                    ),
-                    onPressed: () async {
-                      if (isRedundantClick(DateTime.now())) {
-                        print('hold on, processing');
-                        return;
-                      }
-
-                      showEditDialog(context, nameEditingController,
-                          priceEditingController);
-                    },
-                    child: const Icon(Icons.edit),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      onPrimary: Colors.white,
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(9),
-                    ),
-                    onPressed: () async {
-                      if (isRedundantClick(DateTime.now())) {
-                        print('hold on, processing');
-                        return;
-                      }
-                      await widget.provider.deleteItemFromMenu(_id);
-                      widget.updateParentFunction();
-                    },
-                    child: const Icon(Icons.delete),
-                  ),
-                ]),
+                Row(children: actionWidgets),
               ],
             )));
   }
